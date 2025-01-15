@@ -1,0 +1,1 @@
+{ "dart.flutterRunAdditionalArgs": [ "--no-enable-impeller" ] }
