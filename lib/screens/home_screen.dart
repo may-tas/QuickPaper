@@ -20,6 +20,9 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     _scrollController.addListener(_onScroll);
+    _searchController.addListener(() {
+      setState(() {}); // This will rebuild the widget when text changes
+    });
   }
 
   void _onScroll() {
@@ -151,6 +154,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   icon: const Icon(Icons.clear),
                                   onPressed: () {
                                     _searchController.clear();
+                                    context.read<ArticleCubit>().reset();
                                     FocusScope.of(context).unfocus();
                                   },
                                 )
@@ -164,6 +168,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         onSubmitted: (query) {
                           if (query.isNotEmpty) {
                             context.read<ArticleCubit>().searchArticles(query);
+                          } else {
+                            context.read<ArticleCubit>().reset();
                           }
                         },
                       ),

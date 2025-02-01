@@ -46,7 +46,7 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         title: 'Research Papers',
         theme: ThemeData(
-          primarySwatch: Colors.blue,
+          primaryColor: Colors.blue,
           useMaterial3: true,
         ),
         home: const HomeScreen(),

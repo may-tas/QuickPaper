@@ -58,6 +58,11 @@ class ArticleCubit extends Cubit<ArticleState> {
     }
   }
 
+  void reset() {
+    _lastQuery = '';
+    emit(const ArticleState()); // This will reset to initial state
+  }
+
   Future<void> loadMore() async {
     if (_isLoading ||
         !state.hasMoreData ||
