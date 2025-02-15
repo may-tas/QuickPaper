@@ -1,6 +1,6 @@
-# research_articles_app
+# QuickPaper
 
-A new Flutter project.
+- Browse and view all research articles through your phone screen, search by name, author and year of publication, save favourite articles , follow authors and see their articles.
 
 ## Getting Started
 
@@ -14,3 +14,4 @@ A few resources to get you started if this is your first Flutter project:
 For help getting started with Flutter development, view the
 [online documentation](https://docs.flutter.dev/), which offers tutorials,
 samples, guidance on mobile development, and a full API reference.
+`
