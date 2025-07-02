@@ -3,12 +3,14 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:quick_paper/utils/size_config.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../cubit/ai_cubit.dart';
 import '../cubit/ai_state.dart';
 import '../models/article.dart';
+import '../utils/network_painter.dart';
 
 class ArticlePreviewScreen extends StatefulWidget {
   final Article article;
@@ -63,19 +65,22 @@ class _ArticlePreviewScreenState extends State<ArticlePreviewScreen> {
                     StretchMode.zoomBackground,
                     StretchMode.blurBackground,
                   ],
-                  title: Text(
-                    widget.article.title,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      shadows: [
-                        Shadow(
-                          offset: Offset(0, 1),
-                          blurRadius: 3.0,
-                          color: Color.fromARGB(255, 0, 0, 0),
-                        ),
-                      ],
+                  title: Padding(
+                    padding: EdgeInsets.all(SizeConfig.getPercentSize(2)),
+                    child: Text(
+                      widget.article.title,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        shadows: [
+                          Shadow(
+                            offset: Offset(0, 1),
+                            blurRadius: 3.0,
+                            color: Color.fromARGB(255, 0, 0, 0),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                   background: Container(
@@ -385,8 +390,6 @@ class _ArticlePreviewScreenState extends State<ArticlePreviewScreen> {
     );
   }
 
-// Previous code remains the same until _buildBottomBar method
-
   Widget _buildBottomBar() {
     return Positioned(
       left: 0,
@@ -454,34 +457,4 @@ class _ArticlePreviewScreenState extends State<ArticlePreviewScreen> {
       ),
     );
   }
-
-// Rest of the code remains the same
-}
-
-class NetworkPainter extends CustomPainter {
-  @override
-  void paint(Canvas canvas, Size size) {
-    final paint = Paint()
-      ..color = Colors.white.withAlpha((0.1 * 255).toInt())
-      ..strokeWidth = 1.0
-      ..style = PaintingStyle.stroke;
-
-    final random = DateTime.now().millisecondsSinceEpoch;
-    final points = List.generate(
-      10,
-      (i) => Offset(
-        (random + i * 50) % size.width,
-        (random + i * 70) % size.height,
-      ),
-    );
-
-    for (var i = 0; i < points.length; i++) {
-      for (var j = i + 1; j < points.length; j++) {
-        canvas.drawLine(points[i], points[j], paint);
-      }
-    }
-  }
-
-  @override
-  bool shouldRepaint(CustomPainter oldDelegate) => false;
 }

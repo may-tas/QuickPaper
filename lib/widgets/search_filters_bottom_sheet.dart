@@ -81,7 +81,7 @@ class _SearchFiltersBottomSheetState extends State<SearchFiltersBottomSheet> {
               children: [
                 Text(
                   'Search Filters',
-                  style: Typo.titleLarge.copyWith(
+                  style: Typo.titleMedium.copyWith(
                     fontWeight: FontWeight.w600,
                     color: Colors.black87,
                   ),
@@ -90,9 +90,9 @@ class _SearchFiltersBottomSheetState extends State<SearchFiltersBottomSheet> {
                   onPressed: _clearFilters,
                   child: Text(
                     'Clear All',
-                    style: Typo.bodyMedium.copyWith(
+                    style: Typo.titleMedium.copyWith(
                       color: Colors.red[600],
-                      fontWeight: FontWeight.w500,
+                      fontWeight: FontWeight.w600,
                     ),
                   ),
                 ),
@@ -222,7 +222,7 @@ class _SearchFiltersBottomSheetState extends State<SearchFiltersBottomSheet> {
                               Expanded(
                                 child: Text(
                                   'Open Access papers are freely available to read online without subscription fees',
-                                  style: Typo.bodySmall.copyWith(
+                                  style: Typo.headlineSmall.copyWith(
                                     color: Colors.blue[800],
                                     fontWeight: FontWeight.w500,
                                   ),
@@ -235,11 +235,17 @@ class _SearchFiltersBottomSheetState extends State<SearchFiltersBottomSheet> {
 
                         // Radio options
                         RadioListTile<bool?>(
-                          title: Text('All Papers', style: Typo.bodyMedium),
+                          title: Text(
+                            'All Papers',
+                            style: Typo.titleSmall.copyWith(
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
                           subtitle: Text(
                             'Show both open and closed access papers',
-                            style: Typo.bodySmall
-                                .copyWith(color: Colors.grey[600]),
+                            style: Typo.bodySmall.copyWith(
+                              color: Colors.grey[600],
+                            ),
                           ),
                           value: null,
                           groupValue: _isOpenAccess,
@@ -250,13 +256,18 @@ class _SearchFiltersBottomSheetState extends State<SearchFiltersBottomSheet> {
                         RadioListTile<bool?>(
                           title: Row(
                             children: [
+                              Text(
+                                'Open Access Only',
+                                style: Typo.titleSmall.copyWith(
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                              SizedBox(width: SizeConfig.getPercentSize(1.5)),
                               Icon(
                                 Icons.lock_open,
                                 color: Colors.green[600],
                                 size: SizeConfig.getPercentSize(4),
                               ),
-                              SizedBox(width: SizeConfig.getPercentSize(1.5)),
-                              Text('Open Access Only', style: Typo.bodyMedium),
                             ],
                           ),
                           subtitle: Text(
@@ -273,14 +284,18 @@ class _SearchFiltersBottomSheetState extends State<SearchFiltersBottomSheet> {
                         RadioListTile<bool?>(
                           title: Row(
                             children: [
+                              Text(
+                                'Subscription Required',
+                                style: Typo.titleSmall.copyWith(
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                              SizedBox(width: SizeConfig.getPercentSize(1.5)),
                               Icon(
                                 Icons.lock,
                                 color: Colors.red[600],
                                 size: SizeConfig.getPercentSize(4),
                               ),
-                              SizedBox(width: SizeConfig.getPercentSize(1.5)),
-                              Text('Subscription Required',
-                                  style: Typo.bodyMedium),
                             ],
                           ),
                           subtitle: Text(
@@ -381,7 +396,7 @@ class _SearchFiltersBottomSheetState extends State<SearchFiltersBottomSheet> {
       children: [
         Text(
           title,
-          style: Typo.bodyMedium.copyWith(
+          style: Typo.titleSmall.copyWith(
             fontWeight: FontWeight.w600,
             color: Colors.black87,
           ),
@@ -400,10 +415,11 @@ class _SearchFiltersBottomSheetState extends State<SearchFiltersBottomSheet> {
     return TextField(
       controller: controller,
       keyboardType: keyboardType,
-      style: Typo.titleSmall,
+      style: Typo.titleSmall.copyWith(fontSize: SizeConfig.getPercentSize(4)),
       decoration: InputDecoration(
         hintText: hintText,
-        hintStyle: Typo.titleSmall.copyWith(color: Colors.grey[500]),
+        hintStyle: Typo.titleSmall.copyWith(
+            color: Colors.grey[500], fontSize: SizeConfig.getPercentSize(4)),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: BorderSide(color: Colors.grey[300]!),

@@ -43,10 +43,7 @@ class FilterChipsWidget extends StatelessWidget {
             _buildFilterChip(
               context,
               'Citations: ${filters.minCitationCount ?? "0"} - ${filters.maxCitationCount ?? "∞"}',
-              () {
-                context.read<ArticleCubit>().filterByMinCitationCount(null);
-                context.read<ArticleCubit>().filterByMaxCitationCount(null);
-              },
+              () => context.read<ArticleCubit>().clearCitationFilters(),
             ),
           if (filters.language != null)
             _buildFilterChip(

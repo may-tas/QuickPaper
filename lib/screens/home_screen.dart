@@ -325,7 +325,7 @@ class _HomeScreenState extends State<HomeScreen> {
         children: [
           Icon(
             Icons.search,
-            size: 64,
+            size: 84,
             color: Colors.grey[400],
           ),
           const SizedBox(height: 16),

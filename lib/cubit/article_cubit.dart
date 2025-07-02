@@ -165,22 +165,6 @@ class ArticleCubit extends Cubit<ArticleState> {
     updateFilters(updatedFilters);
   }
 
-  void filterByMinCitationCount(int? minCitationCount) {
-    final updatedFilters = state.filters.copyWith(
-      minCitationCount: minCitationCount,
-      clearMinCitationCount: minCitationCount == null,
-    );
-    updateFilters(updatedFilters);
-  }
-
-  Future<void> filterByMaxCitationCount(int? maxCitationCount) async {
-    final updatedFilters = state.filters.copyWith(
-      minCitationCount: maxCitationCount,
-      clearMinCitationCount: maxCitationCount == null,
-    );
-    updateFilters(updatedFilters);
-  }
-
   void filterByLanguage(String? language) {
     final updatedFilters = state.filters.copyWith(
       language: language,
@@ -215,6 +199,14 @@ class ArticleCubit extends Cubit<ArticleState> {
     } else {
       searchWithFilters();
     }
+  }
+
+  void clearCitationFilters() {
+    final updatedFilters = state.filters.copyWith(
+      clearMinCitationCount: true,
+      clearMaxCitationCount: true,
+    );
+    updateFilters(updatedFilters);
   }
 
   List<String> getRecentSearches() {
