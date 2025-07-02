@@ -6,8 +6,9 @@ class SearchFilters extends Equatable {
   final String query;
   final String? year;
   final String? author;
-  final String? venue;
-  final String? institution;
+  final int? minCitationCount;
+  final int? maxCitationCount;
+  final String? language;
   final bool? isOpenAccess;
   final String sortBy;
 
@@ -15,8 +16,9 @@ class SearchFilters extends Equatable {
     this.query = '',
     this.year,
     this.author,
-    this.venue,
-    this.institution,
+    this.minCitationCount,
+    this.maxCitationCount,
+    this.language,
     this.isOpenAccess,
     this.sortBy = 'relevance_score:desc',
   });
@@ -25,22 +27,29 @@ class SearchFilters extends Equatable {
     String? query,
     String? year,
     String? author,
-    String? venue,
-    String? institution,
+    int? minCitationCount,
+    int? maxCitationCount,
+    String? language,
     bool? isOpenAccess,
     String? sortBy,
     bool clearYear = false,
     bool clearAuthor = false,
-    bool clearVenue = false,
-    bool clearInstitution = false,
+    bool clearMinCitationCount = false,
+    bool clearMaxCitationCount = false,
+    bool clearLanguage = false,
     bool clearIsOpenAccess = false,
   }) {
     return SearchFilters(
       query: query ?? this.query,
       year: clearYear ? null : (year ?? this.year),
       author: clearAuthor ? null : (author ?? this.author),
-      venue: clearVenue ? null : (venue ?? this.venue),
-      institution: clearInstitution ? null : (institution ?? this.institution),
+      minCitationCount: clearMinCitationCount
+          ? null
+          : (minCitationCount ?? this.minCitationCount),
+      maxCitationCount: clearMaxCitationCount
+          ? null
+          : (maxCitationCount ?? this.maxCitationCount),
+      language: clearLanguage ? null : (language ?? this.language),
       isOpenAccess:
           clearIsOpenAccess ? null : (isOpenAccess ?? this.isOpenAccess),
       sortBy: sortBy ?? this.sortBy,
@@ -50,8 +59,9 @@ class SearchFilters extends Equatable {
   bool get hasActiveFilters {
     return year != null ||
         author != null ||
-        venue != null ||
-        institution != null ||
+        minCitationCount != null ||
+        maxCitationCount != null ||
+        language != null ||
         isOpenAccess != null ||
         sortBy != 'relevance_score:desc';
   }
@@ -60,8 +70,9 @@ class SearchFilters extends Equatable {
     int count = 0;
     if (year != null) count++;
     if (author != null) count++;
-    if (venue != null) count++;
-    if (institution != null) count++;
+    if (minCitationCount != null) count++;
+    if (maxCitationCount != null) count++;
+    if (language != null) count++;
     if (isOpenAccess != null) count++;
     if (sortBy != 'relevance_score:desc') count++;
     return count;
@@ -72,8 +83,9 @@ class SearchFilters extends Equatable {
         query,
         year,
         author,
-        venue,
-        institution,
+        minCitationCount,
+        maxCitationCount,
+        language,
         isOpenAccess,
         sortBy,
       ];

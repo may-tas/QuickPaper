@@ -7,17 +7,42 @@ import '../utils/typography.dart';
 class OpenAccessBadge extends StatelessWidget {
   final Article article;
   final bool showFullDescription;
+  final bool isOpenAccess;
 
   const OpenAccessBadge({
     super.key,
     required this.article,
+    required this.isOpenAccess,
     this.showFullDescription = false,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Tooltip(
-      message: article.openAccessDescription,
+    return GestureDetector(
+      onTap: () {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text(
+                'Open Access Status',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+              content: Text(isOpenAccess
+                  ? _getOpenAccessDescription()
+                  : "This article is not Open Access, meaning it requires a subscription or payment to read it."),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text('Close'),
+                ),
+              ],
+            );
+          },
+        );
+      },
       child: Container(
         padding: EdgeInsets.symmetric(
           horizontal: SizeConfig.getPercentSize(2),
@@ -127,6 +152,33 @@ class OpenAccessBadge extends StatelessWidget {
         return 'Diamond OA';
       default:
         return 'Open Access';
+    }
+  }
+
+  // Helper method to get detailed open access description
+  String _getOpenAccessDescription() {
+    if (!article.isOpenAccess) {
+      return 'This article is not Open Access, meaning it requires a subscription or payment to read it.';
+    }
+
+    switch (article.openAccessType?.toLowerCase()) {
+      case 'gold':
+        return 'GOLD OPEN ACCESS - This article is published in a fully open access journal and is freely available to read on the publisher\'s website. It\'s peer-reviewed and high quality.';
+
+      case 'green':
+        return 'GREEN OPEN ACCESS - This article is available in institutional or subject repositories like arXiv or PubMed Central. A free copy is available, though it may be a preprint, postprint, or published version.';
+
+      case 'hybrid':
+        return 'HYBRID OPEN ACCESS - This article is published in a subscription journal but the authors paid a fee to make it open access. It has the same peer review quality as subscription papers.';
+
+      case 'bronze':
+        return 'BRONZE OPEN ACCESS - This article is free to read on the publisher\'s website but may have restrictions. It doesn\'t have a clear open license and access might be temporary.';
+
+      case 'diamond':
+        return 'DIAMOND OPEN ACCESS - This article is free to read AND was free to publish. There are no fees for authors or readers, and it\'s published in a peer-reviewed academic journal.';
+
+      default:
+        return 'This article is Open Access, meaning it is freely available to read and download.';
     }
   }
 }

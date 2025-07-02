@@ -38,17 +38,21 @@ class FilterChipsWidget extends StatelessWidget {
               'Author: ${filters.author}',
               () => context.read<ArticleCubit>().filterByAuthor(null),
             ),
-          if (filters.venue != null)
+          if (filters.minCitationCount != null ||
+              filters.maxCitationCount != null)
             _buildFilterChip(
               context,
-              'Venue: ${filters.venue}',
-              () => context.read<ArticleCubit>().filterByVenue(null),
+              'Citations: ${filters.minCitationCount ?? "0"} - ${filters.maxCitationCount ?? "∞"}',
+              () {
+                context.read<ArticleCubit>().filterByMinCitationCount(null);
+                context.read<ArticleCubit>().filterByMaxCitationCount(null);
+              },
             ),
-          if (filters.institution != null)
+          if (filters.language != null)
             _buildFilterChip(
               context,
-              'Institution: ${filters.institution}',
-              () => context.read<ArticleCubit>().filterByInstitution(null),
+              'Language: ${_getLanguageDisplayName(filters.language!)}',
+              () => context.read<ArticleCubit>().filterByLanguage(null),
             ),
           if (filters.isOpenAccess != null)
             _buildFilterChip(
@@ -131,6 +135,31 @@ class FilterChipsWidget extends StatelessWidget {
       case 'relevance_score:desc':
       default:
         return 'Relevance';
+    }
+  }
+
+  String _getLanguageDisplayName(String languageCode) {
+    switch (languageCode) {
+      case 'en':
+        return 'English';
+      case 'es':
+        return 'Spanish';
+      case 'fr':
+        return 'French';
+      case 'de':
+        return 'German';
+      case 'zh':
+        return 'Chinese';
+      case 'ja':
+        return 'Japanese';
+      case 'pt':
+        return 'Portuguese';
+      case 'it':
+        return 'Italian';
+      case 'ru':
+        return 'Russian';
+      default:
+        return languageCode;
     }
   }
 }

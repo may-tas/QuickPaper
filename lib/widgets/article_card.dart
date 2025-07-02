@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../models/article.dart';
+import '../widgets/open_access_badge.dart';
 
 class ArticleCard extends StatelessWidget {
   final Article article;
@@ -48,12 +49,14 @@ class ArticleCard extends StatelessWidget {
                           article.title,
                           style:
                               Theme.of(context).textTheme.titleLarge?.copyWith(
-                                    color: Theme.of(context).primaryColor,
                                     fontWeight: FontWeight.bold,
-                                    fontSize: 20,
-                                    height: 1.3,
                                   ),
                         ),
+                      ),
+                      OpenAccessBadge(
+                        article: article,
+                        showFullDescription: true,
+                        isOpenAccess: article.isOpenAccess,
                       ),
                     ],
                   ),

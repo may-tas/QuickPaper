@@ -21,11 +21,12 @@ class ApiService {
     required String query,
     String? year,
     String? author,
-    String? venue,
-    String? institution,
+    int? minCitationCount,
+    int? maxCitationCount,
+    String? language,
     bool? isOpenAccess,
     String sort = 'relevance_score:desc',
-    int limit = 10,
+    int limit = 5,
     int offset = 0,
   }) async {
     final queryParams = <String, String>{
@@ -47,11 +48,14 @@ class ApiService {
     if (author != null && author.isNotEmpty) {
       filters.add('raw_author_name.search:$author');
     }
-    if (venue != null && venue.isNotEmpty) {
-      filters.add('primary_location.source.display_name.search:$venue');
+    if (minCitationCount != null) {
+      filters.add('cited_by_count:>$minCitationCount');
     }
-    if (institution != null && institution.isNotEmpty) {
-      filters.add('institutions.display_name.search:$institution');
+    if (maxCitationCount != null) {
+      filters.add('cited_by_count:<$maxCitationCount');
+    }
+    if (language != null && language.isNotEmpty) {
+      filters.add('language:$language');
     }
     if (isOpenAccess != null) filters.add('is_oa:$isOpenAccess');
 

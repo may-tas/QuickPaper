@@ -106,6 +106,8 @@ class Article extends Equatable {
     }
   }
 
+  String get oaType => openAccessType ?? 'Unknown';
+
   factory Article.fromJson(Map<String, dynamic> json) {
     return Article(
       paperId: json['paperId'] as String,

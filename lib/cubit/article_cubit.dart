@@ -9,7 +9,7 @@ import 'article_state.dart';
 class ArticleCubit extends Cubit<ArticleState> {
   final ArticleRepository _repository;
   String _lastQuery = '';
-  static const int pageSize = 10;
+  static const int pageSize = 5;
   bool _isLoading = false;
 
   ArticleCubit({required ArticleRepository repository})
@@ -36,8 +36,9 @@ class ArticleCubit extends Cubit<ArticleState> {
         query: query,
         year: state.filters.year,
         author: state.filters.author,
-        venue: state.filters.venue,
-        institution: state.filters.institution,
+        maxCitationCount: state.filters.maxCitationCount,
+        minCitationCount: state.filters.minCitationCount,
+        language: state.filters.language,
         isOpenAccess: state.filters.isOpenAccess,
         sort: state.filters.sortBy,
         offset: state.currentPage * pageSize,
@@ -89,8 +90,9 @@ class ArticleCubit extends Cubit<ArticleState> {
         query: _lastQuery, // Use last query or empty string
         year: state.filters.year,
         author: state.filters.author,
-        venue: state.filters.venue,
-        institution: state.filters.institution,
+        maxCitationCount: state.filters.maxCitationCount,
+        minCitationCount: state.filters.minCitationCount,
+        language: state.filters.language,
         isOpenAccess: state.filters.isOpenAccess,
         sort: state.filters.sortBy,
         offset: 0,
@@ -163,18 +165,26 @@ class ArticleCubit extends Cubit<ArticleState> {
     updateFilters(updatedFilters);
   }
 
-  void filterByVenue(String? venue) {
+  void filterByMinCitationCount(int? minCitationCount) {
     final updatedFilters = state.filters.copyWith(
-      venue: venue,
-      clearVenue: venue == null,
+      minCitationCount: minCitationCount,
+      clearMinCitationCount: minCitationCount == null,
     );
     updateFilters(updatedFilters);
   }
 
-  void filterByInstitution(String? institution) {
+  Future<void> filterByMaxCitationCount(int? maxCitationCount) async {
     final updatedFilters = state.filters.copyWith(
-      institution: institution,
-      clearInstitution: institution == null,
+      minCitationCount: maxCitationCount,
+      clearMinCitationCount: maxCitationCount == null,
+    );
+    updateFilters(updatedFilters);
+  }
+
+  void filterByLanguage(String? language) {
+    final updatedFilters = state.filters.copyWith(
+      language: language,
+      clearLanguage: language == null,
     );
     updateFilters(updatedFilters);
   }

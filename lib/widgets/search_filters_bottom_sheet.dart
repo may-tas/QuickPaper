@@ -22,8 +22,9 @@ class SearchFiltersBottomSheet extends StatefulWidget {
 class _SearchFiltersBottomSheetState extends State<SearchFiltersBottomSheet> {
   late final TextEditingController _yearController;
   late final TextEditingController _authorController;
-  late final TextEditingController _venueController;
-  late final TextEditingController _institutionController;
+  late final TextEditingController _minCitationController;
+  late final TextEditingController _maxCitationController;
+  String? _language;
   bool? _isOpenAccess;
   String _sortBy = 'relevance_score:desc';
 
@@ -33,9 +34,11 @@ class _SearchFiltersBottomSheetState extends State<SearchFiltersBottomSheet> {
     _yearController = TextEditingController(text: widget.currentFilters.year);
     _authorController =
         TextEditingController(text: widget.currentFilters.author);
-    _venueController = TextEditingController(text: widget.currentFilters.venue);
-    _institutionController =
-        TextEditingController(text: widget.currentFilters.institution);
+    _minCitationController = TextEditingController(
+        text: widget.currentFilters.minCitationCount?.toString());
+    _maxCitationController = TextEditingController(
+        text: widget.currentFilters.maxCitationCount?.toString());
+    _language = widget.currentFilters.language;
     _isOpenAccess = widget.currentFilters.isOpenAccess;
     _sortBy = widget.currentFilters.sortBy;
   }
@@ -44,8 +47,8 @@ class _SearchFiltersBottomSheetState extends State<SearchFiltersBottomSheet> {
   void dispose() {
     _yearController.dispose();
     _authorController.dispose();
-    _venueController.dispose();
-    _institutionController.dispose();
+    _minCitationController.dispose();
+    _maxCitationController.dispose();
     super.dispose();
   }
 
@@ -127,23 +130,68 @@ class _SearchFiltersBottomSheetState extends State<SearchFiltersBottomSheet> {
 
                   SizedBox(height: SizeConfig.getPercentSize(4)),
 
-                  // Venue Filter
+                  // Citation Count Filter
                   _buildFilterSection(
-                    'Journal/Conference',
-                    _buildTextField(
-                      controller: _venueController,
-                      hintText: 'Search by venue name',
+                    'Citation Count',
+                    Row(
+                      children: [
+                        Expanded(
+                          child: _buildTextField(
+                            controller: _minCitationController,
+                            hintText: 'Min',
+                            keyboardType: TextInputType.number,
+                          ),
+                        ),
+                        SizedBox(width: SizeConfig.getPercentSize(2)),
+                        Expanded(
+                          child: _buildTextField(
+                            controller: _maxCitationController,
+                            hintText: 'Max',
+                            keyboardType: TextInputType.number,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
 
                   SizedBox(height: SizeConfig.getPercentSize(4)),
 
-                  // Institution Filter
+                  // Language Filter
                   _buildFilterSection(
-                    'Institution',
-                    _buildTextField(
-                      controller: _institutionController,
-                      hintText: 'Search by institution name',
+                    'Language',
+                    DropdownButtonFormField<String?>(
+                      value: _language,
+                      decoration: InputDecoration(
+                        hintText: 'Select language',
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: BorderSide(color: Colors.grey[300]!),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide:
+                              const BorderSide(color: Colors.deepPurple),
+                        ),
+                        contentPadding: EdgeInsets.symmetric(
+                          horizontal: SizeConfig.getPercentSize(3),
+                          vertical: SizeConfig.getPercentSize(2.5),
+                        ),
+                      ),
+                      items: const [
+                        DropdownMenuItem(
+                            value: null, child: Text('All Languages')),
+                        DropdownMenuItem(value: 'en', child: Text('English')),
+                        DropdownMenuItem(value: 'es', child: Text('Spanish')),
+                        DropdownMenuItem(value: 'fr', child: Text('French')),
+                        DropdownMenuItem(value: 'de', child: Text('German')),
+                        DropdownMenuItem(value: 'zh', child: Text('Chinese')),
+                        DropdownMenuItem(value: 'ja', child: Text('Japanese')),
+                        DropdownMenuItem(
+                            value: 'pt', child: Text('Portuguese')),
+                        DropdownMenuItem(value: 'it', child: Text('Italian')),
+                        DropdownMenuItem(value: 'ru', child: Text('Russian')),
+                      ],
+                      onChanged: (value) => setState(() => _language = value),
                     ),
                   ),
 
@@ -381,12 +429,13 @@ class _SearchFiltersBottomSheetState extends State<SearchFiltersBottomSheet> {
       author: _authorController.text.trim().isEmpty
           ? null
           : _authorController.text.trim(),
-      venue: _venueController.text.trim().isEmpty
+      minCitationCount: _minCitationController.text.trim().isEmpty
           ? null
-          : _venueController.text.trim(),
-      institution: _institutionController.text.trim().isEmpty
+          : int.tryParse(_minCitationController.text.trim()),
+      maxCitationCount: _maxCitationController.text.trim().isEmpty
           ? null
-          : _institutionController.text.trim(),
+          : int.tryParse(_maxCitationController.text.trim()),
+      language: _language,
       isOpenAccess: _isOpenAccess,
       sortBy: _sortBy,
     );
@@ -399,8 +448,9 @@ class _SearchFiltersBottomSheetState extends State<SearchFiltersBottomSheet> {
     setState(() {
       _yearController.clear();
       _authorController.clear();
-      _venueController.clear();
-      _institutionController.clear();
+      _minCitationController.clear();
+      _maxCitationController.clear();
+      _language = null;
       _isOpenAccess = null;
       _sortBy = 'relevance_score:desc';
     });
