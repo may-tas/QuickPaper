@@ -29,14 +29,20 @@ class SearchFilters extends Equatable {
     String? institution,
     bool? isOpenAccess,
     String? sortBy,
+    bool clearYear = false,
+    bool clearAuthor = false,
+    bool clearVenue = false,
+    bool clearInstitution = false,
+    bool clearIsOpenAccess = false,
   }) {
     return SearchFilters(
       query: query ?? this.query,
-      year: year ?? this.year,
-      author: author ?? this.author,
-      venue: venue ?? this.venue,
-      institution: institution ?? this.institution,
-      isOpenAccess: isOpenAccess ?? this.isOpenAccess,
+      year: clearYear ? null : (year ?? this.year),
+      author: clearAuthor ? null : (author ?? this.author),
+      venue: clearVenue ? null : (venue ?? this.venue),
+      institution: clearInstitution ? null : (institution ?? this.institution),
+      isOpenAccess:
+          clearIsOpenAccess ? null : (isOpenAccess ?? this.isOpenAccess),
       sortBy: sortBy ?? this.sortBy,
     );
   }

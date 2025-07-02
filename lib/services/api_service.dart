@@ -1,6 +1,7 @@
 // lib/data/services/api_service.dart
 
 import 'dart:convert';
+import 'dart:developer';
 import 'package:http/http.dart' as http;
 
 class ApiService {
@@ -61,35 +62,17 @@ class ApiService {
     final uri = Uri.https(_baseUrl, '/works', queryParams);
 
     try {
+      log("Searching articles with query: $query, filters: $filters, uri: $uri");
       final response = await http.get(uri, headers: _headers);
-
+      log("response: ${response.statusCode} ${response.body}");
       if (response.statusCode == 200) {
+        log("response: ${response.body}");
         return json.decode(response.body);
       } else {
         throw Exception('Failed to search articles: ${response.statusCode}');
       }
     } catch (e) {
       throw Exception('Failed to search articles: $e');
-    }
-  }
-
-  Future<Map<String, dynamic>> getArticleDetails(String workId) async {
-    final uri = Uri.https(_baseUrl, '/works/$workId', {
-      'select':
-          'id,title,display_name,publication_year,doi,open_access,primary_location,authorships,cited_by_count,referenced_works,type_crossref,abstract_inverted_index,concepts,related_works'
-    });
-
-    try {
-      final response = await http.get(uri, headers: _headers);
-
-      if (response.statusCode == 200) {
-        return json.decode(response.body);
-      } else {
-        throw Exception(
-            'Failed to get article details: ${response.statusCode}');
-      }
-    } catch (e) {
-      throw Exception('Failed to get article details: $e');
     }
   }
 
@@ -124,7 +107,6 @@ class ApiService {
 
     try {
       final response = await http.get(uri, headers: _headers);
-
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
         return List<Map<String, dynamic>>.from(data['results']);

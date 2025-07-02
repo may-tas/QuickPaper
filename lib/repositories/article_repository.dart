@@ -45,11 +45,6 @@ class ArticleRepository {
         .toList();
   }
 
-  Future<Article> getArticleDetails(String paperId) async {
-    final response = await _apiService.getArticleDetails(paperId);
-    return Article.fromOpenAlexJson(response);
-  }
-
   Future<List<Article>> getPaperCitations(String paperId) async {
     final citations = await _apiService.getPaperCitations(paperId);
     return citations.map((paper) => Article.fromOpenAlexJson(paper)).toList();

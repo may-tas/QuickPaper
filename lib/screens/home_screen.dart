@@ -240,7 +240,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: Row(
                     children: [
                       Text(
-                        'Found ${state.articles.length} results',
+                        'Found ${state.articles.length} results, scroll to fetch more',
                         style: Theme.of(context).textTheme.bodySmall?.copyWith(
                               color: Colors.grey[600],
                             ),
@@ -255,6 +255,8 @@ class _HomeScreenState extends State<HomeScreen> {
                           context
                               .read<ArticleCubit>()
                               .searchArticles(_searchController.text);
+                        } else if (state.filters.hasActiveFilters) {
+                          context.read<ArticleCubit>().searchWithFilters();
                         }
                       },
                       child: ListView.builder(

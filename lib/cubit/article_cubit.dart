@@ -17,7 +17,6 @@ class ArticleCubit extends Cubit<ArticleState> {
         super(const ArticleState());
 
   Future<void> searchArticles(String query, {bool refresh = true}) async {
-    if (query.isEmpty) return;
     if (_isLoading) return;
     _isLoading = true;
 
@@ -53,9 +52,50 @@ class ArticleCubit extends Cubit<ArticleState> {
         hasMoreData: articles.length >= pageSize,
       ));
 
-      if (!refresh) {
+      if (!refresh && query.isNotEmpty) {
         await _repository.saveRecentSearch(query);
       }
+    } catch (e) {
+      emit(state.copyWith(
+        status: ArticleStatus.error,
+        error: e.toString(),
+      ));
+    } finally {
+      _isLoading = false;
+    }
+  }
+
+  // New method to search with filters only
+  Future<void> searchWithFilters() async {
+    if (_isLoading) return;
+    _isLoading = true;
+
+    emit(state.copyWith(
+      status: ArticleStatus.loading,
+      currentPage: 0,
+      hasMoreData: true,
+      articles: [],
+    ));
+
+    try {
+      final articles = await _repository.searchArticles(
+        query: _lastQuery, // Use last query or empty string
+        year: state.filters.year,
+        author: state.filters.author,
+        venue: state.filters.venue,
+        institution: state.filters.institution,
+        isOpenAccess: state.filters.isOpenAccess,
+        sort: state.filters.sortBy,
+        offset: 0,
+        limit: pageSize,
+      );
+
+      emit(state.copyWith(
+        articles: articles,
+        status: ArticleStatus.success,
+        hasMoreData: articles.length >= pageSize,
+        currentPage: 0,
+      ));
     } catch (e) {
       emit(state.copyWith(
         status: ArticleStatus.error,
@@ -74,7 +114,6 @@ class ArticleCubit extends Cubit<ArticleState> {
   Future<void> loadMore() async {
     if (_isLoading ||
         !state.hasMoreData ||
-        _lastQuery.isEmpty ||
         state.status == ArticleStatus.loading) {
       return;
     }
@@ -93,33 +132,47 @@ class ArticleCubit extends Cubit<ArticleState> {
       articles: [],
       hasMoreData: true,
     ));
-    if (_lastQuery.isNotEmpty) {
-      searchArticles(_lastQuery);
-    }
+    // Always search when filters change, even without main query
+    searchWithFilters();
   }
 
   void filterByYear(String? year) {
-    final updatedFilters = state.filters.copyWith(year: year);
+    final updatedFilters = state.filters.copyWith(
+      year: year,
+      clearYear: year == null,
+    );
     updateFilters(updatedFilters);
   }
 
   void filterByAuthor(String? author) {
-    final updatedFilters = state.filters.copyWith(author: author);
+    final updatedFilters = state.filters.copyWith(
+      author: author,
+      clearAuthor: author == null,
+    );
     updateFilters(updatedFilters);
   }
 
   void filterByVenue(String? venue) {
-    final updatedFilters = state.filters.copyWith(venue: venue);
+    final updatedFilters = state.filters.copyWith(
+      venue: venue,
+      clearVenue: venue == null,
+    );
     updateFilters(updatedFilters);
   }
 
   void filterByInstitution(String? institution) {
-    final updatedFilters = state.filters.copyWith(institution: institution);
+    final updatedFilters = state.filters.copyWith(
+      institution: institution,
+      clearInstitution: institution == null,
+    );
     updateFilters(updatedFilters);
   }
 
   void filterByOpenAccess(bool? isOpenAccess) {
-    final updatedFilters = state.filters.copyWith(isOpenAccess: isOpenAccess);
+    final updatedFilters = state.filters.copyWith(
+      isOpenAccess: isOpenAccess,
+      clearIsOpenAccess: isOpenAccess == null,
+    );
     updateFilters(updatedFilters);
   }
 
@@ -135,9 +188,8 @@ class ArticleCubit extends Cubit<ArticleState> {
       articles: [],
       hasMoreData: true,
     ));
-    if (_lastQuery.isNotEmpty) {
-      searchArticles(_lastQuery);
-    }
+    // Search with cleared filters
+    searchWithFilters();
   }
 
   List<String> getRecentSearches() {
