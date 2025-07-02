@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -11,6 +12,7 @@ import 'repositories/article_repository.dart';
 import 'screens/home_screen.dart';
 import 'services/api_service.dart';
 import 'services/gemini_service.dart';
+import 'utils/size_config.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -21,6 +23,8 @@ void main() async {
     apiService: apiService,
     prefs: prefs,
   );
+
+  await dotenv.load(fileName: ".env");
 
   runApp(MyApp(repository: repository));
 }
@@ -35,6 +39,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    SizeConfig().init(context);
     return MultiBlocProvider(
       providers: [
         BlocProvider(

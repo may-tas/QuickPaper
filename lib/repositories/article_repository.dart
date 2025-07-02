@@ -28,20 +28,21 @@ class ArticleRepository {
       offset: offset,
     );
 
-    final papers = response['data'] as List<dynamic>;
+    final papers = response['results']
+        as List<dynamic>; // OpenAlex uses 'results' instead of 'data'
     return papers
-        .map((paper) => Article.fromJson(paper as Map<String, dynamic>))
+        .map((paper) => Article.fromOpenAlexJson(paper as Map<String, dynamic>))
         .toList();
   }
 
   Future<Article> getArticleDetails(String paperId) async {
     final response = await _apiService.getArticleDetails(paperId);
-    return Article.fromJson(response);
+    return Article.fromOpenAlexJson(response);
   }
 
   Future<List<Article>> getPaperCitations(String paperId) async {
     final citations = await _apiService.getPaperCitations(paperId);
-    return citations.map((paper) => Article.fromJson(paper)).toList();
+    return citations.map((paper) => Article.fromOpenAlexJson(paper)).toList();
   }
 
   // Local storage methods

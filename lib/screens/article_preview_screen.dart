@@ -67,7 +67,7 @@ class _ArticlePreviewScreenState extends State<ArticlePreviewScreen> {
                     widget.article.title,
                     style: const TextStyle(
                       color: Colors.white,
-                      fontSize: 18,
+                      fontSize: 16,
                       fontWeight: FontWeight.bold,
                       shadows: [
                         Shadow(

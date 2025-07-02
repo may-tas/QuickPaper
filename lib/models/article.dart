@@ -15,9 +15,18 @@ class Author {
 
   factory Author.fromJson(Map<String, dynamic> json) {
     return Author(
-      authorId: json['authorId'] ?? '',
-      name: json['name'] ?? '',
-      url: json['url'],
+      authorId: json['authorId'] ?? json['id'] ?? '',
+      name: json['name'] ?? json['display_name'] ?? '',
+      url: json['url'] ?? json['orcid'],
+    );
+  }
+
+  // Factory for OpenAlex format
+  factory Author.fromOpenAlexJson(Map<String, dynamic> json) {
+    return Author(
+      authorId: json['id'] ?? '',
+      name: json['display_name'] ?? '',
+      url: json['orcid'],
     );
   }
 }
@@ -78,6 +87,80 @@ class Article extends Equatable {
               .toList() ??
           [],
     );
+  }
+
+  // Factory for OpenAlex format
+  factory Article.fromOpenAlexJson(Map<String, dynamic> json) {
+    // Extract PDF URLs from open access locations
+    String? pdfUrl;
+    final oaLocations = json['open_access']?['oa_locations'] as List<dynamic>?;
+    if (oaLocations != null) {
+      for (final location in oaLocations) {
+        if (location['host_type'] == 'repository' && location['url'] != null) {
+          pdfUrl = location['url'] as String;
+          break;
+        }
+      }
+    }
+
+    // Extract abstract from inverted index
+    String abstract = '';
+    final abstractIndex =
+        json['abstract_inverted_index'] as Map<String, dynamic>?;
+    if (abstractIndex != null) {
+      abstract = _reconstructAbstractFromInvertedIndex(abstractIndex);
+    }
+
+    return Article(
+      paperId: json['id'] as String,
+      title: json['title'] as String? ?? 'Untitled',
+      authors: (json['authorships'] as List<dynamic>?)
+              ?.map((authorship) => Author.fromOpenAlexJson(
+                  authorship['author'] as Map<String, dynamic>))
+              .toList() ??
+          [],
+      abstract: abstract,
+      url: json['doi'] as String? ?? json['id'] as String,
+      year: json['publication_year'] as int?,
+      referenceCount: json['referenced_works']?.length as int? ?? 0,
+      citationCount: json['cited_by_count'] as int? ?? 0,
+      influentialCitationCount: json['cited_by_count'] as int? ??
+          0, // OpenAlex doesn't have this field
+      isOpenAccess: json['open_access']?['is_oa'] as bool? ?? false,
+      pdfUrl: pdfUrl,
+      venue: json['primary_location']?['source']?['display_name'] as String?,
+      journalName:
+          json['primary_location']?['source']?['display_name'] as String?,
+      publicationTypes: (json['type_crossref'] != null)
+          ? [json['type_crossref'] as String]
+          : [],
+    );
+  }
+
+  // Helper method to reconstruct abstract from inverted index
+  static String _reconstructAbstractFromInvertedIndex(
+      Map<String, dynamic> invertedIndex) {
+    if (invertedIndex.isEmpty) return '';
+
+    // Create a map to store word positions
+    final Map<int, String> positionToWord = {};
+
+    // Process each word and its positions
+    invertedIndex.forEach((word, positions) {
+      if (positions is List) {
+        for (final position in positions) {
+          if (position is int) {
+            positionToWord[position] = word;
+          }
+        }
+      }
+    });
+
+    // Sort by position and reconstruct the text
+    final sortedPositions = positionToWord.keys.toList()..sort();
+    final words = sortedPositions.map((pos) => positionToWord[pos]!).toList();
+
+    return words.join(' ');
   }
 
   Map<String, dynamic> toJson() => {
