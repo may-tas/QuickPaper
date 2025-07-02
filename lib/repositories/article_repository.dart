@@ -45,10 +45,10 @@ class ArticleRepository {
         .toList();
   }
 
-  Future<List<Article>> getPaperCitations(String paperId) async {
-    final citations = await _apiService.getPaperCitations(paperId);
-    return citations.map((paper) => Article.fromOpenAlexJson(paper)).toList();
-  }
+  // Future<List<Article>> getPaperCitations(String paperId) async {
+  //   final citations = await _apiService.getPaperCitations(paperId);
+  //   return citations.map((paper) => Article.fromOpenAlexJson(paper)).toList();
+  // }
 
   // Local storage methods
   Future<void> saveRecentSearch(String query) async {

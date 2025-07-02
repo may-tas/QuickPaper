@@ -33,7 +33,7 @@ class ApiService {
       'page': ((offset ~/ limit) + 1).toString(), // OpenAlex uses page numbers
       'sort': sort,
       'select':
-          'id,title,display_name,publication_year,doi,open_access,primary_location,authorships,cited_by_count,referenced_works,type_crossref,abstract_inverted_index', // Request specific fields including abstract
+          'id,title,display_name,publication_year,doi,open_access,primary_location,authorships,cited_by_count,referenced_works,type,abstract_inverted_index', // Request specific fields
     };
 
     // Handle different search types
@@ -45,7 +45,7 @@ class ApiService {
     final filters = <String>[];
     if (year != null && year.isNotEmpty) filters.add('publication_year:$year');
     if (author != null && author.isNotEmpty) {
-      filters.add('author.display_name.search:$author');
+      filters.add('raw_author_name.search:$author');
     }
     if (venue != null && venue.isNotEmpty) {
       filters.add('primary_location.source.display_name.search:$venue');
@@ -57,6 +57,10 @@ class ApiService {
 
     if (filters.isNotEmpty) {
       queryParams['filter'] = filters.join(',');
+    }
+
+    if (query.isEmpty && filters.isNotEmpty && sort == 'relevance_score:desc') {
+      queryParams['sort'] = 'cited_by_count:desc';
     }
 
     final uri = Uri.https(_baseUrl, '/works', queryParams);
@@ -73,49 +77,6 @@ class ApiService {
       }
     } catch (e) {
       throw Exception('Failed to search articles: $e');
-    }
-  }
-
-  Future<List<Map<String, dynamic>>> getAuthorPapers(String authorId) async {
-    final uri = Uri.https(_baseUrl, '/works', {
-      'filter': 'author.id:$authorId',
-      'sort': 'publication_date:desc',
-      'per-page': '25',
-    });
-
-    try {
-      final response = await http.get(uri, headers: _headers);
-
-      if (response.statusCode == 200) {
-        final data = json.decode(response.body);
-        return List<Map<String, dynamic>>.from(data['results']);
-      } else {
-        throw Exception('Failed to get author papers: ${response.statusCode}');
-      }
-    } catch (e) {
-      throw Exception('Failed to get author papers: $e');
-    }
-  }
-
-  // Get citations for a paper
-  Future<List<Map<String, dynamic>>> getPaperCitations(String paperId) async {
-    final uri = Uri.https(_baseUrl, '/works', {
-      'filter': 'cites:$paperId',
-      'sort': 'publication_date:desc',
-      'per-page': '25',
-    });
-
-    try {
-      final response = await http.get(uri, headers: _headers);
-      if (response.statusCode == 200) {
-        final data = json.decode(response.body);
-        return List<Map<String, dynamic>>.from(data['results']);
-      } else {
-        throw Exception(
-            'Failed to get paper citations: ${response.statusCode}');
-      }
-    } catch (e) {
-      throw Exception('Failed to get paper citations: $e');
     }
   }
 }

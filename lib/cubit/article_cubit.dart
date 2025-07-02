@@ -68,6 +68,13 @@ class ArticleCubit extends Cubit<ArticleState> {
   // New method to search with filters only
   Future<void> searchWithFilters() async {
     if (_isLoading) return;
+
+    // If no search query and no active filters, reset to initial state
+    if (_lastQuery.isEmpty && !state.filters.hasActiveFilters) {
+      emit(const ArticleState());
+      return;
+    }
+
     _isLoading = true;
 
     emit(state.copyWith(
@@ -132,8 +139,12 @@ class ArticleCubit extends Cubit<ArticleState> {
       articles: [],
       hasMoreData: true,
     ));
-    // Always search when filters change, even without main query
-    searchWithFilters();
+    // Check if we should reset to initial state or search with filters
+    if (_lastQuery.isEmpty && !newFilters.hasActiveFilters) {
+      emit(const ArticleState());
+    } else {
+      searchWithFilters();
+    }
   }
 
   void filterByYear(String? year) {
@@ -188,8 +199,12 @@ class ArticleCubit extends Cubit<ArticleState> {
       articles: [],
       hasMoreData: true,
     ));
-    // Search with cleared filters
-    searchWithFilters();
+    // Check if we should reset to initial state or search with cleared filters
+    if (_lastQuery.isEmpty) {
+      emit(const ArticleState());
+    } else {
+      searchWithFilters();
+    }
   }
 
   List<String> getRecentSearches() {
