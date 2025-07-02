@@ -19,12 +19,15 @@ class ApiService {
   Future<Map<String, dynamic>> searchArticles({
     required String query,
     String? year,
+    String? author,
+    String? venue,
+    String? institution,
+    bool? isOpenAccess,
     String sort = 'relevance_score:desc',
     int limit = 10,
     int offset = 0,
   }) async {
     final queryParams = <String, String>{
-      'search': query,
       'per-page': limit.toString(),
       'page': ((offset ~/ limit) + 1).toString(), // OpenAlex uses page numbers
       'sort': sort,
@@ -32,9 +35,24 @@ class ApiService {
           'id,title,display_name,publication_year,doi,open_access,primary_location,authorships,cited_by_count,referenced_works,type_crossref,abstract_inverted_index', // Request specific fields including abstract
     };
 
+    // Handle different search types
+    if (query.isNotEmpty) {
+      queryParams['search'] = query;
+    }
+
     // Add filters
     final filters = <String>[];
-    if (year != null) filters.add('publication_year:$year');
+    if (year != null && year.isNotEmpty) filters.add('publication_year:$year');
+    if (author != null && author.isNotEmpty) {
+      filters.add('author.display_name.search:$author');
+    }
+    if (venue != null && venue.isNotEmpty) {
+      filters.add('primary_location.source.display_name.search:$venue');
+    }
+    if (institution != null && institution.isNotEmpty) {
+      filters.add('institutions.display_name.search:$institution');
+    }
+    if (isOpenAccess != null) filters.add('is_oa:$isOpenAccess');
 
     if (filters.isNotEmpty) {
       queryParams['filter'] = filters.join(',');

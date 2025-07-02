@@ -3,6 +3,7 @@
 import 'package:equatable/equatable.dart';
 
 import '../models/article.dart';
+import '../models/search_filters.dart';
 
 enum ArticleStatus { initial, loading, success, error }
 
@@ -10,7 +11,7 @@ class ArticleState extends Equatable {
   final List<Article> articles;
   final ArticleStatus status;
   final String? error;
-  final String? year;
+  final SearchFilters filters;
   final int currentPage;
   final bool hasMoreData;
 
@@ -18,7 +19,7 @@ class ArticleState extends Equatable {
     this.articles = const [],
     this.status = ArticleStatus.initial,
     this.error,
-    this.year,
+    this.filters = const SearchFilters(),
     this.currentPage = 0,
     this.hasMoreData = true,
   });
@@ -27,7 +28,7 @@ class ArticleState extends Equatable {
     List<Article>? articles,
     ArticleStatus? status,
     String? error,
-    String? year,
+    SearchFilters? filters,
     int? currentPage,
     bool? hasMoreData,
   }) {
@@ -35,7 +36,7 @@ class ArticleState extends Equatable {
       articles: articles ?? this.articles,
       status: status ?? this.status,
       error: error ?? this.error,
-      year: year ?? this.year,
+      filters: filters ?? this.filters,
       currentPage: currentPage ?? this.currentPage,
       hasMoreData: hasMoreData ?? this.hasMoreData,
     );
@@ -46,7 +47,7 @@ class ArticleState extends Equatable {
         articles,
         status,
         error,
-        year,
+        filters,
         currentPage,
         hasMoreData,
       ];

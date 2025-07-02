@@ -29,7 +29,9 @@ class ArticleCard extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(20.0),
               decoration: BoxDecoration(
-                color: Theme.of(context).primaryColor.withOpacity(0.05),
+                color: Theme.of(context)
+                    .primaryColor
+                    .withAlpha((0.05 * 255).toInt()),
                 borderRadius: const BorderRadius.only(
                   topLeft: Radius.circular(16.0),
                   topRight: Radius.circular(16.0),
@@ -53,37 +55,6 @@ class ArticleCard extends StatelessWidget {
                                   ),
                         ),
                       ),
-                      // if (article.isOpenAccess)
-                      //   Container(
-                      //     margin: const EdgeInsets.only(left: 8.0),
-                      //     padding: const EdgeInsets.symmetric(
-                      //         horizontal: 8, vertical: 4),
-                      //     decoration: BoxDecoration(
-                      //       color: Colors.green.withOpacity(0.1),
-                      //       borderRadius: BorderRadius.circular(8),
-                      //     ),
-                      //     child: Row(
-                      //       mainAxisSize: MainAxisSize.min,
-                      //       children: [
-                      //         const Icon(
-                      //           Icons.lock_open,
-                      //           color: Colors.green,
-                      //           size: 16,
-                      //         ),
-                      //         const SizedBox(width: 4),
-                      //         Text(
-                      //           'Open Access',
-                      //           style: Theme.of(context)
-                      //               .textTheme
-                      //               .bodySmall
-                      //               ?.copyWith(
-                      //                 color: Colors.green,
-                      //                 fontWeight: FontWeight.bold,
-                      //               ),
-                      //         ),
-                      //       ],
-                      //     ),
-                      //   ),
                     ],
                   ),
                 ],
@@ -182,8 +153,9 @@ class ArticleCard extends StatelessWidget {
                             vertical: 6,
                           ),
                           decoration: BoxDecoration(
-                            color:
-                                Theme.of(context).primaryColor.withOpacity(0.1),
+                            color: Theme.of(context)
+                                .primaryColor
+                                .withAlpha((0.1 * 255).toInt()),
                             borderRadius: BorderRadius.circular(20),
                           ),
                           child: Text(

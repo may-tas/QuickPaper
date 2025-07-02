@@ -83,7 +83,9 @@ class _ArticlePreviewScreenState extends State<ArticlePreviewScreen> {
                       gradient: LinearGradient(
                         colors: [
                           Theme.of(context).primaryColor,
-                          Theme.of(context).primaryColor.withOpacity(0.8),
+                          Theme.of(context)
+                              .primaryColor
+                              .withAlpha((0.8 * 255).toInt()),
                         ],
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
@@ -104,7 +106,9 @@ class _ArticlePreviewScreenState extends State<ArticlePreviewScreen> {
                               end: Alignment.bottomCenter,
                               colors: [
                                 Colors.transparent,
-                                Theme.of(context).primaryColor.withOpacity(0.7),
+                                Theme.of(context)
+                                    .primaryColor
+                                    .withAlpha((0.7 * 255).toInt()),
                               ],
                             ),
                           ),
@@ -189,7 +193,8 @@ class _ArticlePreviewScreenState extends State<ArticlePreviewScreen> {
                 author.name,
                 style: const TextStyle(fontSize: 13),
               ),
-              backgroundColor: Theme.of(context).primaryColor.withOpacity(0.1),
+              backgroundColor:
+                  Theme.of(context).primaryColor.withAlpha((0.1 * 255).toInt()),
             );
           }).toList(),
         ),
@@ -313,7 +318,9 @@ class _ArticlePreviewScreenState extends State<ArticlePreviewScreen> {
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: Theme.of(context).primaryColor.withOpacity(0.05),
+                color: Theme.of(context)
+                    .primaryColor
+                    .withAlpha((0.05 * 255).toInt()),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: MarkdownBody(
@@ -335,7 +342,9 @@ class _ArticlePreviewScreenState extends State<ArticlePreviewScreen> {
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
                       border: Border.all(
-                        color: Theme.of(context).primaryColor.withOpacity(0.2),
+                        color: Theme.of(context)
+                            .primaryColor
+                            .withAlpha((0.2 * 255).toInt()),
                       ),
                       borderRadius: BorderRadius.circular(8),
                     ),
@@ -388,7 +397,7 @@ class _ArticlePreviewScreenState extends State<ArticlePreviewScreen> {
           color: Colors.white,
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.1),
+              color: Colors.black.withAlpha((0.1 * 255).toInt()),
               blurRadius: 8,
               offset: const Offset(0, -3),
             ),
@@ -453,7 +462,7 @@ class NetworkPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = Colors.white.withOpacity(0.1)
+      ..color = Colors.white.withAlpha((0.1 * 255).toInt())
       ..strokeWidth = 1.0
       ..style = PaintingStyle.stroke;
 

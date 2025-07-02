@@ -2,6 +2,7 @@
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../models/search_filters.dart';
 import '../repositories/article_repository.dart';
 import 'article_state.dart';
 
@@ -26,6 +27,7 @@ class ArticleCubit extends Cubit<ArticleState> {
         currentPage: 0,
         hasMoreData: true,
         articles: [], // Clear existing articles on new search
+        filters: state.filters.copyWith(query: query),
       ));
       _lastQuery = query;
     }
@@ -33,7 +35,12 @@ class ArticleCubit extends Cubit<ArticleState> {
     try {
       final articles = await _repository.searchArticles(
         query: query,
-        year: state.year,
+        year: state.filters.year,
+        author: state.filters.author,
+        venue: state.filters.venue,
+        institution: state.filters.institution,
+        isOpenAccess: state.filters.isOpenAccess,
+        sort: state.filters.sortBy,
         offset: state.currentPage * pageSize,
         limit: pageSize,
       );
@@ -79,9 +86,51 @@ class ArticleCubit extends Cubit<ArticleState> {
     await searchArticles(_lastQuery, refresh: false);
   }
 
-  void filterByYear(String? year) {
+  void updateFilters(SearchFilters newFilters) {
     emit(state.copyWith(
-      year: year,
+      filters: newFilters,
+      currentPage: 0,
+      articles: [],
+      hasMoreData: true,
+    ));
+    if (_lastQuery.isNotEmpty) {
+      searchArticles(_lastQuery);
+    }
+  }
+
+  void filterByYear(String? year) {
+    final updatedFilters = state.filters.copyWith(year: year);
+    updateFilters(updatedFilters);
+  }
+
+  void filterByAuthor(String? author) {
+    final updatedFilters = state.filters.copyWith(author: author);
+    updateFilters(updatedFilters);
+  }
+
+  void filterByVenue(String? venue) {
+    final updatedFilters = state.filters.copyWith(venue: venue);
+    updateFilters(updatedFilters);
+  }
+
+  void filterByInstitution(String? institution) {
+    final updatedFilters = state.filters.copyWith(institution: institution);
+    updateFilters(updatedFilters);
+  }
+
+  void filterByOpenAccess(bool? isOpenAccess) {
+    final updatedFilters = state.filters.copyWith(isOpenAccess: isOpenAccess);
+    updateFilters(updatedFilters);
+  }
+
+  void setSortBy(String sortBy) {
+    final updatedFilters = state.filters.copyWith(sortBy: sortBy);
+    updateFilters(updatedFilters);
+  }
+
+  void clearFilters() {
+    emit(state.copyWith(
+      filters: const SearchFilters(),
       currentPage: 0,
       articles: [],
       hasMoreData: true,

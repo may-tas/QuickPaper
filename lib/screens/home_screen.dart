@@ -4,6 +4,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../cubit/article_cubit.dart';
 import '../cubit/article_state.dart';
 import '../widgets/article_card.dart';
+import '../widgets/filter_chips_widget.dart';
+import '../widgets/search_filters_bottom_sheet.dart';
 import 'article_preview_screen.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -61,7 +63,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Text(
-                    'Research',
+                    'Quick',
                     style: TextStyle(
                       color: Colors.white.withAlpha((0.9 * 255).toInt()),
                       fontSize: 24,
@@ -70,7 +72,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   const SizedBox(width: 5),
                   const Text(
-                    'Articles',
+                    'Paper',
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 24,
@@ -142,37 +144,66 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                         ],
                       ),
-                      child: TextField(
-                        controller: _searchController,
-                        decoration: InputDecoration(
-                          hintText: 'Search research papers...',
-                          prefixIcon: Icon(
-                            Icons.search,
-                            color: Theme.of(context).primaryColor,
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: TextField(
+                              controller: _searchController,
+                              decoration: InputDecoration(
+                                hintText: 'Search research papers...',
+                                prefixIcon: Icon(
+                                  Icons.search,
+                                  color: Theme.of(context).primaryColor,
+                                ),
+                                border: InputBorder.none,
+                                contentPadding: const EdgeInsets.symmetric(
+                                  horizontal: 16,
+                                  vertical: 12,
+                                ),
+                              ),
+                              onSubmitted: (query) {
+                                if (query.isNotEmpty) {
+                                  context
+                                      .read<ArticleCubit>()
+                                      .searchArticles(query);
+                                } else {
+                                  context.read<ArticleCubit>().reset();
+                                }
+                              },
+                            ),
                           ),
-                          suffixIcon: _searchController.text.isNotEmpty
-                              ? IconButton(
-                                  icon: const Icon(Icons.clear),
-                                  onPressed: () {
-                                    _searchController.clear();
-                                    context.read<ArticleCubit>().reset();
-                                    FocusScope.of(context).unfocus();
-                                  },
-                                )
-                              : null,
-                          border: InputBorder.none,
-                          contentPadding: const EdgeInsets.symmetric(
-                            horizontal: 16,
-                            vertical: 12,
+                          // Filter Button
+                          BlocBuilder<ArticleCubit, ArticleState>(
+                            builder: (context, state) {
+                              return IconButton(
+                                icon: Badge(
+                                  isLabelVisible:
+                                      state.filters.hasActiveFilters,
+                                  label: Text(
+                                      '${state.filters.activeFilterCount}'),
+                                  child: Icon(
+                                    Icons.tune,
+                                    color: state.filters.hasActiveFilters
+                                        ? Theme.of(context).primaryColor
+                                        : Colors.grey[600],
+                                  ),
+                                ),
+                                onPressed: () => _showFiltersBottomSheet(
+                                    context, state.filters),
+                              );
+                            },
                           ),
-                        ),
-                        onSubmitted: (query) {
-                          if (query.isNotEmpty) {
-                            context.read<ArticleCubit>().searchArticles(query);
-                          } else {
-                            context.read<ArticleCubit>().reset();
-                          }
-                        },
+                          // Clear Button
+                          if (_searchController.text.isNotEmpty)
+                            IconButton(
+                              icon: const Icon(Icons.clear),
+                              onPressed: () {
+                                _searchController.clear();
+                                context.read<ArticleCubit>().reset();
+                                FocusScope.of(context).unfocus();
+                              },
+                            ),
+                        ],
                       ),
                     ),
                   ),
@@ -200,6 +231,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
             return Column(
               children: [
+                // Filter chips
+                FilterChipsWidget(filters: state.filters),
+
                 Padding(
                   padding:
                       const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -356,6 +390,18 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  void _showFiltersBottomSheet(BuildContext context, filters) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => SizedBox(
+        height: MediaQuery.of(context).size.height * 0.75,
+        child: SearchFiltersBottomSheet(currentFilters: filters),
       ),
     );
   }

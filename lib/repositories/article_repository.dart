@@ -18,12 +18,22 @@ class ArticleRepository {
   Future<List<Article>> searchArticles({
     required String query,
     String? year,
+    String? author,
+    String? venue,
+    String? institution,
+    bool? isOpenAccess,
+    String sort = 'relevance_score:desc',
     int limit = 10,
     int offset = 0,
   }) async {
     final response = await _apiService.searchArticles(
       query: query,
       year: year,
+      author: author,
+      venue: venue,
+      institution: institution,
+      isOpenAccess: isOpenAccess,
+      sort: sort,
       limit: limit,
       offset: offset,
     );

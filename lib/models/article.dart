@@ -42,6 +42,7 @@ class Article extends Equatable {
   final int citationCount;
   final int influentialCitationCount;
   final bool isOpenAccess;
+  final String? openAccessType; // gold, green, hybrid, bronze, diamond, closed
   final String? pdfUrl;
   final String? venue;
   final String? journalName;
@@ -58,11 +59,52 @@ class Article extends Equatable {
     this.citationCount = 0,
     this.influentialCitationCount = 0,
     this.isOpenAccess = false,
+    this.openAccessType,
     this.pdfUrl,
     this.venue,
     this.journalName,
     this.publicationTypes = const [],
   });
+
+  // Helper method to get open access description
+  String get openAccessDescription {
+    if (!isOpenAccess) return 'Subscription Required';
+
+    switch (openAccessType?.toLowerCase()) {
+      case 'gold':
+        return 'Gold Open Access - Free on publisher website';
+      case 'green':
+        return 'Green Open Access - Free in repository';
+      case 'hybrid':
+        return 'Hybrid Open Access - Free option in subscription journal';
+      case 'bronze':
+        return 'Bronze Open Access - Free on publisher website (no license)';
+      case 'diamond':
+        return 'Diamond Open Access - Free with no author fees';
+      default:
+        return 'Open Access';
+    }
+  }
+
+  // Helper method to get open access icon
+  String get openAccessIcon {
+    if (!isOpenAccess) return '🔒';
+
+    switch (openAccessType?.toLowerCase()) {
+      case 'gold':
+        return '🥇';
+      case 'green':
+        return '🟢';
+      case 'hybrid':
+        return '🔄';
+      case 'bronze':
+        return '🥉';
+      case 'diamond':
+        return '💎';
+      default:
+        return '🔓';
+    }
+  }
 
   factory Article.fromJson(Map<String, dynamic> json) {
     return Article(
@@ -79,6 +121,7 @@ class Article extends Equatable {
       citationCount: json['citationCount'] as int? ?? 0,
       influentialCitationCount: json['influentialCitationCount'] as int? ?? 0,
       isOpenAccess: json['isOpenAccess'] as bool? ?? false,
+      openAccessType: json['openAccessType'] as String?,
       pdfUrl: json['openAccessPdf']?['url'] as String?,
       venue: json['venue'] as String?,
       journalName: json['journal']?['name'] as String?,
@@ -127,6 +170,7 @@ class Article extends Equatable {
       influentialCitationCount: json['cited_by_count'] as int? ??
           0, // OpenAlex doesn't have this field
       isOpenAccess: json['open_access']?['is_oa'] as bool? ?? false,
+      openAccessType: json['open_access']?['oa_status'] as String?,
       pdfUrl: pdfUrl,
       venue: json['primary_location']?['source']?['display_name'] as String?,
       journalName:
@@ -180,6 +224,7 @@ class Article extends Equatable {
         'citationCount': citationCount,
         'influentialCitationCount': influentialCitationCount,
         'isOpenAccess': isOpenAccess,
+        'openAccessType': openAccessType,
         'pdfUrl': pdfUrl,
         'venue': venue,
         'journalName': journalName,
@@ -198,6 +243,7 @@ class Article extends Equatable {
         citationCount,
         influentialCitationCount,
         isOpenAccess,
+        openAccessType,
         pdfUrl,
         venue,
         journalName,
