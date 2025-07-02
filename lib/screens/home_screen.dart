@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:research_articles_app/cubit/article_cubit.dart';
-import 'package:research_articles_app/cubit/article_state.dart';
-import 'package:research_articles_app/screens/article_preview_screen.dart';
-import 'package:research_articles_app/widgets/article_card.dart';
+
+import '../cubit/article_cubit.dart';
+import '../cubit/article_state.dart';
+import '../widgets/article_card.dart';
+import 'article_preview_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});

@@ -1,7 +1,8 @@
 // lib/logic/cubits/article/article_state.dart
 
 import 'package:equatable/equatable.dart';
-import 'package:research_articles_app/models/article.dart';
+
+import '../models/article.dart';
 
 enum ArticleStatus { initial, loading, success, error }
 

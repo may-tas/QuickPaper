@@ -1,7 +1,8 @@
 // lib/data/services/gemini_service.dart
 
 import 'package:google_generative_ai/google_generative_ai.dart';
-import 'package:research_articles_app/models/article.dart';
+
+import '../models/article.dart';
 
 class GeminiService {
   static const String _apiKey = 'AIzaSyCwHLYzISlb13HzdBPmDWan8PSEo5eTsso';

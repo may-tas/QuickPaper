@@ -1,7 +1,8 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:research_articles_app/cubit/ai_state.dart';
-import 'package:research_articles_app/models/article.dart';
-import 'package:research_articles_app/services/gemini_service.dart';
+
+import '../models/article.dart';
+import '../services/gemini_service.dart';
+import 'ai_state.dart';
 
 class AiCubit extends Cubit<AiState> {
   final GeminiService _geminiService;

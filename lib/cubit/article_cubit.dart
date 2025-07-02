@@ -1,8 +1,9 @@
 // lib/logic/cubits/article/article_cubit.dart
 
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:research_articles_app/cubit/article_state.dart';
-import 'package:research_articles_app/repositories/article_repository.dart';
+
+import '../repositories/article_repository.dart';
+import 'article_state.dart';
 
 class ArticleCubit extends Cubit<ArticleState> {
   final ArticleRepository _repository;

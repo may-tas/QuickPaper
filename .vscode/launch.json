@@ -6,19 +6,19 @@
     "configurations": [
 
         {
-            "name": "research_articles_app",
+            "name": "quick_paper",
             "request": "launch",
             "type": "dart",
             "flutterMode": "debug"
         },
         {
-            "name": "research_articles_app (profile mode)",
+            "name": "quick_paper (profile mode)",
             "request": "launch",
             "type": "dart",
             "flutterMode": "profile"
         },
         {
-            "name": "research_articles_app (release mode)",
+            "name": "quick_paper (release mode)",
             "request": "launch",
             "type": "dart",
             "flutterMode": "release"

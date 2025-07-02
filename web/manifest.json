@@ -1,6 +1,6 @@
 {
-    "name": "research_articles_app",
-    "short_name": "research_articles_app",
+    "name": "quick_paper",
+    "short_name": "quick_paper",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

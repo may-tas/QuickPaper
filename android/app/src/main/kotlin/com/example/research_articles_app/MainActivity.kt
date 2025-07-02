@@ -1,4 +1,4 @@
-package com.example.research_articles_app
+package com.example.quick_paper
 
 import io.flutter.embedding.android.FlutterActivity
 

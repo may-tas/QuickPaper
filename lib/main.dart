@@ -2,14 +2,15 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:research_articles_app/cubit/ai_cubit.dart';
-import 'package:research_articles_app/cubit/article_cubit.dart';
-import 'package:research_articles_app/repositories/article_repository.dart';
-import 'package:research_articles_app/screens/home_screen.dart';
-import 'package:research_articles_app/services/api_service.dart';
-import 'package:research_articles_app/services/gemini_service.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
+
+import 'cubit/ai_cubit.dart';
+import 'cubit/article_cubit.dart';
+import 'repositories/article_repository.dart';
+import 'screens/home_screen.dart';
+import 'services/api_service.dart';
+import 'services/gemini_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -46,7 +47,6 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         title: 'Research Papers',
         theme: ThemeData(
-          primaryColor: Colors.blue,
           useMaterial3: true,
         ),
         home: const HomeScreen(),

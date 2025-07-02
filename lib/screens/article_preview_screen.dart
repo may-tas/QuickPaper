@@ -3,11 +3,12 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
-import 'package:research_articles_app/cubit/ai_cubit.dart';
-import 'package:research_articles_app/cubit/ai_state.dart';
-import 'package:research_articles_app/models/article.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
+
+import '../cubit/ai_cubit.dart';
+import '../cubit/ai_state.dart';
+import '../models/article.dart';
 
 class ArticlePreviewScreen extends StatefulWidget {
   final Article article;
